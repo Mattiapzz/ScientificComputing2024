@@ -1,6 +1,4 @@
-#include "sudokuUtils.hh"
-
-#define UL 201
+#include "include/sudokuUtils.hh"
 
 void 
 parseSudokuFile(
@@ -58,25 +56,36 @@ void printSudoku(const std::vector< std::vector<int> >& sudoku) {
 
 
 void prettyPrintSudoku(const std::vector< std::vector<int> >& sudoku){
-  std::cout << "Pretty Printing Sudoku..." << std::endl;
+  fmt::print(fmt::fg(fmt::color::blue) , "Pretty Printing Sudoku...\n");
   std::cout << "==========================" << std::endl;
+  //
+  fmt::print(fmt::bg(fmt::color::blue) , "{}{}{}{}{}{}{}",BUL,HL,BTU,HL,BTU,HL,BUR);
+  std::cout << std::endl;
   for (int i = 0; i < 9; i++) {
-    if (i % 3 == 0) {
-      std::cout << "+-------+-------+-------+" << std::endl;
+    if (i % 3 == 0 && i != 0) {
+      fmt::print(fmt::bg(fmt::color::blue) , "{}{}{}{}{}{}{}",BTL,HL,BC,HL,BC,HL,BTR);
+      std::cout << std::endl;
     }
     for (int j = 0; j < 9; j++) {
       if (j % 3 == 0) {
-        std::cout << "| ";
+        fmt::print(fmt::bg(fmt::color::blue) , "{}",BDV);
+        // std::cout << "| ";
       }
       if (sudoku[i][j] == 0) {
-        std::cout << ". ";
+        fmt::print(fmt::bg(fmt::color::red) , "{}{} ", (j%3==0?" ":""), WB);
+        // std::cout << ". ";
       } else {
-        std::cout << sudoku[i][j] << " ";
+        fmt::print(fmt::bg(fmt::color::green) , "{}{} ",(j%3==0?" ":""), sudoku[i][j]);
+        // std::cout << sudoku[i][j] << " ";
       }
     }
-    std::cout << "|" << std::endl;
+    fmt::print(fmt::bg(fmt::color::blue) , "{}",BDV);
+    std::cout << std::endl;
+    // std::cout << "|" << std::endl;
   }
-  std::cout << "+-------+-------+-------+" << std::endl;
+  fmt::print(fmt::bg(fmt::color::blue) , "{}{}{}{}{}{}{}",BDL,HL,BTD,HL,BTD,HL,BDR);
+  std::cout << std::endl;
+  // std::cout << "+-------+-------+-------+" << std::endl;
   std::cout << "==========================" << std::endl;
 }
 
