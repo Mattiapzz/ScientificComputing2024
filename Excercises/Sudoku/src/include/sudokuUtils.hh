@@ -27,7 +27,7 @@
 #define WB "\u2610"
 
 
-void 
+bool
 parseSudokuFile(
   std::vector< std::vector<int> > & sudoku, 
   const std::string& filename);

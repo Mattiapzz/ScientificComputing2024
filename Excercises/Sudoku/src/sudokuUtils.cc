@@ -1,36 +1,47 @@
 #include "include/sudokuUtils.hh"
 
-void 
+bool 
 parseSudokuFile(
   std::vector< std::vector<int> > & sudoku, 
   const std::string& filename) 
 {
+  bool isvalid = true;
   std::ifstream file(filename);
   std::string line;
   int row = 0;
   std::cout << "Reading Sudoku from " << filename << ":" << std::endl;
-  std::cout << "Printing raw file content..." << std::endl;
-  std::cout << "==========================" << std::endl;
-  while (std::getline(file, line)) {
-    std::cout << line << std::endl;
-    if (line[0] == '+') continue; // ignore border lines
-    std::istringstream iss(line);
-    std::string block;
-    int col = 0;
-    while (std::getline(iss, block, '|')) {
-      block.erase(remove(block.begin(), block.end(), ' '), block.end()); // remove spaces
-      for (std::string::size_type i = 0; i < block.size(); ++i) {
-        char c = block[i];
-        if (c == '.') {
-          sudoku[row][col++] = 0;
-        } else if (isdigit(c)) {
-          sudoku[row][col++] = c - '0';
+  try
+  {
+    std::cout << "Printing raw file content..." << std::endl;
+    std::cout << "==========================" << std::endl;
+    while (std::getline(file, line)) {
+      std::cout << line << std::endl;
+      if (line[0] == '+') continue; // ignore border lines
+      std::istringstream iss(line);
+      std::string block;
+      int col = 0;
+      while (std::getline(iss, block, '|')) {
+        block.erase(remove(block.begin(), block.end(), ' '), block.end()); // remove spaces
+        for (std::string::size_type i = 0; i < block.size(); ++i) {
+          char c = block[i];
+          if (c == '.') {
+            sudoku[row][col++] = 0;
+          } else if (isdigit(c)) {
+            sudoku[row][col++] = c - '0';
+          }
         }
       }
+      row++;
     }
-    row++;
+    std::cout << "==========================" << std::endl;
   }
-  std::cout << "==========================" << std::endl;
+  catch(const std::exception& e)
+  {
+    isvalid = false;
+    fmt::print(fmt::fg(fmt::color::red) , "Something went wrong in the parsing. Sudoku may have an invalid format. Error: {}", e.what());
+    std::cout << "\n";
+  }
+  return isvalid;
 }
 
 void printSudoku(const std::vector< std::vector<int> >& sudoku) {
