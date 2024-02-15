@@ -53,8 +53,8 @@ int main()
   M3b.resize(n_size,m_size);
   
 
-  M1.Random(n_size,p_size);
-  M2.Random(p_size,m_size);
+  M1.setRandom(n_size,p_size);
+  M2.setRandom(p_size,m_size);
 
   // ███████╗████████╗ █████╗ ███╗   ██╗██████╗  █████╗ ██████╗ ██████╗ 
   // ██╔════╝╚══██╔══╝██╔══██╗████╗  ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗
@@ -80,12 +80,12 @@ int main()
   BlockMult BM;
   // test  
 
-
   for (int i = 0; i < n_runs; i++)
   {
+    M3b.setZero(n_size,m_size);
     {
       mytimer t;
-      BM.multiply(M1, M2, M3b, 50, 50, 50);
+      BM.multiply(M1, M2, M3b, 20, 20, 20);
       times(i) = t.elapsed();
     }
   }
@@ -98,8 +98,6 @@ int main()
 
   std::cout << "Check if the results are the same" << std::endl;
   std::cout << "M3a - M3b: " << (M3a- M3b).norm() << std::endl;
-
-
 
   return 0;
 }

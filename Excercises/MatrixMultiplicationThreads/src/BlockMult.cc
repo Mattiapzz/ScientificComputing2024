@@ -40,19 +40,24 @@ BlockMult::multiply(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::M
     return;
   }
   //
+
+
+
+
+
   std::vector<std::future<void>> futures;
   //
-  for(int i = 0; i < C.rows() / n; i++)
+  for(int i = 0; i < A.rows() / n; i++)
   {
-    for(int j = 0; j < C.cols() / m; j++)
+    for(int j = 0; j < B.cols() / m; j++)
     {
       #if TH_POOL
       futures.push_back(
         pool.submit_task(
-          [this, &A, &B, &C, n, m, p, i, j](){this->ComputeCBlock( A, B, C, n, m, p, i, j);})
+          [this, &A, &B, &C, n, m, p, i, j](){this->ComputeCBlock( A, B, C.block(i*n,j*m,n,m), n, m, p, i, j);})
         );
       #else
-      ComputeCBlock( A, B, C, n, m, p, i, j);
+      ComputeCBlock( A, B, C.block(i*n,j*m,n,m), n, m, p, i, j);
       #endif
     }
   }
@@ -65,13 +70,12 @@ BlockMult::multiply(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::M
 //-----------------------------------------------------
 
 void
-BlockMult::ComputeCBlock(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::MatrixXd &C, const int n, const int m, const int p, int i, int j)
+BlockMult::ComputeCBlock(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::Block<Eigen::MatrixXd> &&C, const int n, const int m, const int p, int i, int j)
 {
-  Eigen::MatrixXd C_tmp = C.block( i * C.rows() / n, j * C.cols() / m, n, m);
   for(int k = 0; k < A.cols()/p; k++)
   {
-    C_tmp +=  A.block( i * A.rows() / n, k * A.cols() / p, n, p ) * 
-              B.block( k * B.rows() / p, j * B.cols() / m, p, m );
+    C +=  A.block( i * n, k * p, n, p ) * 
+              B.block( k * p, j * m, p, m );
   }
   return;
 }

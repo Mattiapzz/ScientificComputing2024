@@ -26,7 +26,7 @@ public:
   ~BlockMult();
 private:
   bool checkValidity(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::MatrixXd &C);
-  void ComputeCBlock(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::MatrixXd &C, const int n, const int m, const int p, int i, int j);
+  void ComputeCBlock(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::Block<Eigen::MatrixXd> &&C, const int n, const int m, const int p, int i, int j);
 };
 
 
