@@ -48,6 +48,13 @@ SliceMult::multiply(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::M
   int m_block_remainder = B.cols() % m;
   std::vector<std::future<void>> futures;
   //
+  if(n_block_size < 1 || p_block_size < 1 || m_block_size < 1)
+  {
+    std::cerr << "Invalid slicing: Trying to slice the matrix in blocks of size 0" << std::endl;
+    return;
+  }
+
+  //
   for(int i = 0; i < n; i++)
   {
     for(int j = 0; j < m; j++)
@@ -67,8 +74,7 @@ SliceMult::multiply(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::M
               i, j,
               n_block_remainder, m_block_remainder, p_block_remainder);
           }
-          )
-        );
+        ));
       #else
       // Adjust block sizes for the last block if there is a remainder
       ComputeCBlock(
