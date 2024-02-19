@@ -18,8 +18,6 @@
 #include <iostream>
 
 #include <timer.hh>
-#include <MatrixMult.hh>
-// #include <BlockMult.hh>
 #include <SliceMult.hh>
 
 // eigen do not parallelize
