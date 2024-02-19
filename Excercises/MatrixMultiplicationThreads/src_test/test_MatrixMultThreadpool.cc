@@ -14,15 +14,13 @@
 // Each (i, j) block of matrix C must be computed on a separate thread if available, enabling parallel code execution.
 // Finally, compare the execution speed of your block partitioning matrix multiplication with the timing of the standard Eigen3 matrix multiplication command.
 // Use the proposed ThreadPool to find a better one to perform parallel tasks.
+//----------------------------------------------------------------------------
 
 #include <iostream>
-
 #include <timer.hh>
 #include <SliceMult.hh>
-
 // eigen do not parallelize
 #define EIGEN_DONT_PARALLELIZE
-
 #include <Eigen/Core>
 
 int main()
@@ -33,7 +31,8 @@ int main()
   //    ██║   ██╔══╝  ╚════██║   ██║   
   //    ██║   ███████╗███████║   ██║   
   //    ╚═╝   ╚══════╝╚══════╝   ╚═╝   
-
+  //
+  // se the seed
   srand(0);     
   Eigen::initParallel();
   std::cout << "Eigen Test" << std::endl;
@@ -46,12 +45,12 @@ int main()
   int n_size = 47;
   int p_size = 121;
   int m_size = 187;
+  // resize the matrices
   M1.resize(n_size,p_size);
   M2.resize(p_size,m_size);
   M3a.resize(n_size,m_size);
   M3b.resize(n_size,m_size);
-  
-
+  // randomize
   M1.setRandom(n_size,p_size);
   M2.setRandom(p_size,m_size);
 
@@ -61,7 +60,7 @@ int main()
   // ╚════██║   ██║   ██╔══██║██║╚██╗██║██║  ██║██╔══██║██╔══██╗██║  ██║
   // ███████║   ██║   ██║  ██║██║ ╚████║██████╔╝██║  ██║██║  ██║██████╔╝
   // ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
-                                                                   
+  //
   std::cout << "Standard Product " << std::endl;
   for (int i = 0; i < n_runs; i++)
   {
@@ -71,11 +70,19 @@ int main()
       times(i) = t.elapsed();
     }
   }
+  // statistics
   mean   = times.mean();
   stdDev = (((times.array() - mean) * (times.array() - mean)).sqrt()).sum()/((double)(n_runs-1));
   std::cout << "Average time: " << mean << " ms" << std::endl;
   std::cout << "Standard deviation: " << stdDev << " ms" << std::endl;
-
+  //
+  // ███████╗██╗     ██╗ ██████╗███████╗
+  // ██╔════╝██║     ██║██╔════╝██╔════╝
+  // ███████╗██║     ██║██║     █████╗  
+  // ╚════██║██║     ██║██║     ██╔══╝  
+  // ███████║███████╗██║╚██████╗███████╗
+  // ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝
+  //
   SliceMult SM;
   // test
   for (int i = 0; i < n_runs; i++)
@@ -87,14 +94,25 @@ int main()
       times(i) = t.elapsed();
     }
   }
+  // statistics
   mean   = times.mean();
   stdDev = (((times.array() - mean) * (times.array() - mean)).sqrt()).sum()/((double)(n_runs-1));
   std::cout << "Average time: " << mean << " ms" << std::endl;
   std::cout << "Standard deviation: " << stdDev << " ms" << std::endl;
-
-
+  //
+  //  ██████╗ ██████╗ ███╗   ███╗██████╗  █████╗ ██████╗ ███████╗
+  // ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗██╔══██╗██╔════╝
+  // ██║     ██║   ██║██╔████╔██║██████╔╝███████║██████╔╝█████╗  
+  // ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██╔══██╗██╔══╝  
+  // ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║  ██║███████╗
+  //  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+  //
   std::cout << "Check if the results are the same" << std::endl;
   std::cout << "M3a - M3b: " << (M3a- M3b).norm() << std::endl;
-
+  //
+  // std::cout << M3b << std::endl;
+  //
   return 0;
 }
+
+// eof - src_test/test_MatrixMultThreadpool.cc
