@@ -19,7 +19,8 @@
 
 #include <timer.hh>
 #include <MatrixMult.hh>
-#include <BlockMult.hh>
+// #include <BlockMult.hh>
+#include <SliceMult.hh>
 
 // eigen do not parallelize
 #define EIGEN_DONT_PARALLELIZE
@@ -44,9 +45,9 @@ int main()
   int n_runs = 100;
   Eigen::VectorXd times(n_runs);
   Eigen::VectorXd stdDev_vec(n_runs);
-  int n_size = 100;
-  int p_size = 100;
-  int m_size = 100;
+  int n_size = 47;
+  int p_size = 121;
+  int m_size = 187;
   M1.resize(n_size,p_size);
   M2.resize(p_size,m_size);
   M3a.resize(n_size,m_size);
@@ -77,15 +78,14 @@ int main()
   std::cout << "Average time: " << mean << " ms" << std::endl;
   std::cout << "Standard deviation: " << stdDev << " ms" << std::endl;
 
-  BlockMult BM;
-  // test  
-
+  SliceMult SM;
+  // test
   for (int i = 0; i < n_runs; i++)
   {
     M3b.setZero(n_size,m_size);
     {
       mytimer t;
-      BM.multiply(M1, M2, M3b, 20, 20, 20);
+      SM.multiply(M1, M2, M3b, 2, 2, 2);
       times(i) = t.elapsed();
     }
   }
@@ -93,7 +93,6 @@ int main()
   stdDev = (((times.array() - mean) * (times.array() - mean)).sqrt()).sum()/((double)(n_runs-1));
   std::cout << "Average time: " << mean << " ms" << std::endl;
   std::cout << "Standard deviation: " << stdDev << " ms" << std::endl;
-
 
 
   std::cout << "Check if the results are the same" << std::endl;

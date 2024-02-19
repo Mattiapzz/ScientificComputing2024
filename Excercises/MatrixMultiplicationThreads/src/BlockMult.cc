@@ -39,12 +39,6 @@ BlockMult::multiply(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eigen::M
     std::cerr << "Invalid matrix multiplication!!!" << std::endl; 
     return;
   }
-  //
-
-
-
-
-
   std::vector<std::future<void>> futures;
   //
   for(int i = 0; i < A.rows() / n; i++)
@@ -75,7 +69,7 @@ BlockMult::ComputeCBlock(const Eigen::MatrixXd &A, const Eigen::MatrixXd &B, Eig
   for(int k = 0; k < A.cols()/p; k++)
   {
     C +=  A.block( i * n, k * p, n, p ) * 
-              B.block( k * p, j * m, p, m );
+          B.block( k * p, j * m, p, m );
   }
   return;
 }
